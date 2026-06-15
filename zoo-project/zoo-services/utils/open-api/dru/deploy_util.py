@@ -184,10 +184,6 @@ class Process:
             ),
             file=stream,
         )
-        print(
-            "  mutable = {0}".format("true"),
-            file=stream,
-        )
 
         if self.metadata is not None:
             print("  <MetaData>", file=stream)
@@ -606,7 +602,7 @@ class ProcessInput:
             elif type_name == "Directory":
                 type_name = "string"
                 self.file_content_type = "text/plain"
-            elif isinstance(type_name, cwl_v1_0.InputArraySchema):
+            elif isinstance(type_name, cwl_v1_2.InputArraySchema):
                 current_type_is_array=True
                 type_name = type_name.items
                 if type_name in self.__class__.cwl_type_map:
@@ -637,7 +633,7 @@ class ProcessInput:
             self.max_occurs = 1 if not(current_type_is_array) else 1024
             # 0 means unbounded, TODO: what should be the maxOcccurs value if unbounded is not available?
 
-        elif isinstance(input.type, cwl_v1_0.InputArraySchema):
+        elif isinstance(input.type, cwl_v1_2.InputArraySchema):
             type_name = input.type.items
 
             if type_name in self.__class__.cwl_type_map:
@@ -658,7 +654,7 @@ class ProcessInput:
 
             self.type = type_name
 
-        elif isinstance(input.type, cwl_v1_0.InputEnumSchema):
+        elif isinstance(input.type, cwl_v1_2.InputEnumSchema):
             type_name = "string"
             self.possible_values = [str(s)[trim_len+len(self.identifier)+2:] for s in input.type.symbols]
 
