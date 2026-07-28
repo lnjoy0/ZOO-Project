@@ -32,3 +32,18 @@ try:
 except Exception as e:
     print(e,file=sys.stderr)
 
+print('Content-Type: text/html')
+print('')
+from urllib import parse
+
+try:
+    params=parse.parse_qs(os.environ["QUERY_STRING"])
+    r=None
+    if "ZOO_REDIS_HOST" in os.environ:
+        r = redis.Redis(host=os.environ["ZOO_REDIS_HOST"], port=6379, db=0)
+    else:
+        r = redis.Redis(host='redis', port=6379, db=0)
+    r.publish(params["jobid"][0],data)
+except Exception as e:
+	print(e)
+
